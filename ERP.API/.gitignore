@@ -1,0 +1,9 @@
+.vs/
+**/.vs/
+
+
+[B|b]in/
+[O|o]bj/
+
+*.user
+*.suo

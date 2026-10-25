@@ -1,0 +1,12 @@
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\bin\Debug\net9.0\ERP.Domain.deps.json
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\bin\Debug\net9.0\ERP.Domain.dll
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\bin\Debug\net9.0\ERP.Domain.pdb
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.AssemblyInfoInputs.cache
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.AssemblyInfo.cs
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.csproj.CoreCompileInputs.cache
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.sourcelink.json
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.dll
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\refint\ERP.Domain.dll
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.pdb
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ref\ERP.Domain.dll
