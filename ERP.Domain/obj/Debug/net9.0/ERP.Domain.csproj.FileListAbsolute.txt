@@ -10,3 +10,16 @@ C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.dll
 C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\refint\ERP.Domain.dll
 C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.pdb
 C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ref\ERP.Domain.dll
+E:\GraduationProject-ERP\ERP.Domain\bin\Debug\net9.0\ERP.Domain.deps.json
+E:\GraduationProject-ERP\ERP.Domain\bin\Debug\net9.0\ERP.Domain.dll
+E:\GraduationProject-ERP\ERP.Domain\bin\Debug\net9.0\ERP.Domain.pdb
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.AssemblyInfoInputs.cache
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.AssemblyInfo.cs
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.csproj.CoreCompileInputs.cache
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.sourcelink.json
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.dll
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\refint\ERP.Domain.dll
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.pdb
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ref\ERP.Domain.dll
+E:\GraduationProject-ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.csproj.Up2Date
