@@ -1,6 +1,10 @@
-﻿using ERP.Domain.Entities;
+
+using ERP.Domain.Entities;
 using ERP.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
+using ERP.Application.Interfaces;
+using ERP.Application.Services;
+using ERP.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,5 +28,11 @@ public static class ServiceCollectionExtensions
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ErpDbContext>();
             //.AddDefaultTokenProviders();
+
+        service.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        service.AddScoped<IUnitOfWork, UnitOfWork>();
+        service.AddScoped<IFileService, FileService>();
+        service.AddScoped<ICategoryService, CategoryService>();
+        service.AddScoped<IProductService, ProductService>();
     }
 }
