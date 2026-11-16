@@ -1,4 +1,6 @@
-﻿using ERP.Infrastructure.Persistence;
+﻿using ERP.Domain.Entities;
+using ERP.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,5 +17,12 @@ public static class ServiceCollectionExtensions
         service.AddDbContext<ErpDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("ConnectionString"))
         );
+
+        // register identity and identitystores
+
+        service.AddIdentityCore<AppUser>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ErpDbContext>();
+            //.AddDefaultTokenProviders();
     }
 }

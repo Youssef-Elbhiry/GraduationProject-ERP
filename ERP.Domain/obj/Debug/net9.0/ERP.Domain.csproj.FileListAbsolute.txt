@@ -10,3 +10,4 @@ C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.dll
 C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\refint\ERP.Domain.dll
 C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.pdb
 C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ref\ERP.Domain.dll
+C:\Users\GHONIM\OneDrive\Desktop\ERP\ERP.Domain\obj\Debug\net9.0\ERP.Domain.csproj.AssemblyReference.cache
