@@ -12,6 +12,9 @@ public class ErpDbContext : IdentityDbContext<AppUser>
     // put Dbsets here
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<CustomerAddress> CustomerAddresses { get; set; }
+    public DbSet<Warehouse> Warehouses { get; set; }
+    public DbSet<Factory> Factories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

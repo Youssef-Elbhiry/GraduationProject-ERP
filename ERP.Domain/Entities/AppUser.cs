@@ -4,7 +4,7 @@ namespace ERP.Domain.Entities;
 
 public class AppUser : IdentityUser
 {
-    // public string Name { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
 
     public List<RefreshToken>? RefreshTokens { get; set; }
 }

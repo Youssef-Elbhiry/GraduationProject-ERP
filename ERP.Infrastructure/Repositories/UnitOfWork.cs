@@ -1,5 +1,6 @@
 ﻿using ERP.Application.Interfaces;
 using ERP.Infrastructure.Persistence;
+using ERP.Domain.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ERP.Infrastructure.Repositories
@@ -12,13 +13,23 @@ namespace ERP.Infrastructure.Repositories
         public UnitOfWork(ErpDbContext context)
         {
             _context = context;
+            Customers = new CustomerRepository(context);
+            Warehouses = new WarehouseRepository(context);
+            Factories = new FactoryRepository(context);
         }
+
+        public ICustomerRepository Customers { get; }
+        public IWarehouseRepository Warehouses { get; }
+        public IFactoryRepository Factories { get; }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return await _context.Database.BeginTransactionAsync();
 
         }
+
+        public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken) =>
+            _context.Database.BeginTransactionAsync(cancellationToken);
 
         public async Task CommitTransactionAsync()
         {
@@ -55,5 +66,8 @@ namespace ERP.Infrastructure.Repositories
         {
             return await _context.SaveChangesAsync();
         }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken) =>
+            _context.SaveChangesAsync(cancellationToken);
     }
 }

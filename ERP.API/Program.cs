@@ -4,12 +4,15 @@ using ERP.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ERP.Infrastructure.Persistence;
+using ERP.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace ERP.API;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +54,14 @@ public class Program
 
         var app = builder.Build();
 
+        await using (var scope = app.Services.CreateAsyncScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ErpDbContext>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            await DefaultDataSeeder.SeedRolesAsync(roleManager);
+            await DefaultDataSeeder.SeedWarehouseAndFactoryAsync(context);
+        }
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -60,6 +71,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseStaticFiles();
