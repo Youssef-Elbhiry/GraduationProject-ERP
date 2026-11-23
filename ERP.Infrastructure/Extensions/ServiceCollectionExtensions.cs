@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using ERP.Application.Interfaces;
 using ERP.Application.Services;
 using ERP.Infrastructure.Repositories;
+using ERP.Infrastructure.Email;
+using ERP.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,9 @@ public static class ServiceCollectionExtensions
 
         service.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         service.AddScoped<IUnitOfWork, UnitOfWork>();
+        service.AddScoped<IEmailSender, SmtpEmailSender>();
+        service.AddScoped<IDocumentNumberGenerator, DocumentNumberGenerator>();
+        service.Configure<EmailOptions>(configuration.GetSection("Email"));
         service.AddScoped<IFileService, FileService>();
         service.AddScoped<ICategoryService, CategoryService>();
         service.AddScoped<IProductService, ProductService>();

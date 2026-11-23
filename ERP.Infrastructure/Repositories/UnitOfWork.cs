@@ -16,11 +16,15 @@ namespace ERP.Infrastructure.Repositories
             Customers = new CustomerRepository(context);
             Warehouses = new WarehouseRepository(context);
             Factories = new FactoryRepository(context);
+            SalesOrders = new SalesOrderRepository(context);
+            FulfillmentTasks = new FulfillmentTaskRepository(context);
         }
 
         public ICustomerRepository Customers { get; }
         public IWarehouseRepository Warehouses { get; }
         public IFactoryRepository Factories { get; }
+        public ISalesOrderRepository SalesOrders { get; }
+        public IFulfillmentTaskRepository FulfillmentTasks { get; }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {

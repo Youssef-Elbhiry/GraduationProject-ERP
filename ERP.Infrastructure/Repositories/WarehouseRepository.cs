@@ -13,6 +13,8 @@ public class WarehouseRepository(ErpDbContext context) : IWarehouseRepository
         context.Warehouses.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     public Task<Warehouse?> GetFirstAsync(CancellationToken cancellationToken = default) =>
         context.Warehouses.OrderBy(x => x.Id).FirstOrDefaultAsync(cancellationToken);
+    public Task<Warehouse?> GetFirstActiveAsync(CancellationToken cancellationToken = default) =>
+        context.Warehouses.Where(x => x.IsActive).OrderBy(x => x.Id).FirstOrDefaultAsync(cancellationToken);
     public Task AddAsync(Warehouse warehouse, CancellationToken cancellationToken = default) =>
         context.Warehouses.AddAsync(warehouse, cancellationToken).AsTask();
     public void Update(Warehouse warehouse) => context.Warehouses.Update(warehouse);

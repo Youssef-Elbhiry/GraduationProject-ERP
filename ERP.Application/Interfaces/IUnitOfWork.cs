@@ -14,6 +14,8 @@ namespace ERP.Application.Interfaces
         ICustomerRepository Customers { get; }
         IWarehouseRepository Warehouses { get; }
         IFactoryRepository Factories { get; }
+        ISalesOrderRepository SalesOrders { get; }
+        IFulfillmentTaskRepository FulfillmentTasks { get; }
         public IGenericRepository<T> Repository<T>() where T : class;
         public Task<IDbContextTransaction> BeginTransactionAsync();
         public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);

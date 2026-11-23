@@ -22,6 +22,19 @@ public class CustomerRepository(ErpDbContext context) : ICustomerRepository
          where role.Name == UserRole.Customer && user.Id == customerUserId
          select user).FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<AppUser?> GetActiveCustomerByIdAsync(string customerUserId, CancellationToken cancellationToken = default)
+    {
+        var user = await (from candidate in context.Users
+         join userRole in context.UserRoles on candidate.Id equals userRole.UserId
+         join role in context.Roles on userRole.RoleId equals role.Id
+         where role.Name == UserRole.Customer && candidate.Id == customerUserId
+         select candidate).FirstOrDefaultAsync(cancellationToken);
+
+        return user is not null && (!user.LockoutEnabled || user.LockoutEnd is null || user.LockoutEnd <= DateTimeOffset.UtcNow)
+            ? user
+            : null;
+    }
+
     public Task<List<CustomerAddress>> GetAddressesAsync(string customerUserId, CancellationToken cancellationToken = default) =>
         context.CustomerAddresses.Where(x => x.CustomerUserId == customerUserId)
             .OrderByDescending(x => x.IsDefault).ThenBy(x => x.Id).ToListAsync(cancellationToken);

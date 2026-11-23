@@ -177,6 +177,41 @@ namespace ERP.Infrastructure.Migrations
                     b.ToTable("Factories", (string)null);
                 });
 
+            modelBuilder.Entity("ERP.Domain.Entities.FulfillmentTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ReadyAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SalesOrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalesOrderId")
+                        .IsUnique();
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("FulfillmentTasks", (string)null);
+                });
+
             modelBuilder.Entity("ERP.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -223,6 +258,92 @@ namespace ERP.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("ERP.Domain.Entities.SalesOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("ConfirmedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CustomerUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("OrderNo")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ShippingAddressId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("ValidUntil")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("CustomerUserId");
+
+                    b.HasIndex("OrderNo")
+                        .IsUnique();
+
+                    b.HasIndex("ShippingAddressId");
+
+                    b.ToTable("SalesOrders", (string)null);
+                });
+
+            modelBuilder.Entity("ERP.Domain.Entities.SalesOrderLine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Qty")
+                        .HasColumnType("decimal(18,3)");
+
+                    b.Property<int>("SalesOrderId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SalesOrderId");
+
+                    b.ToTable("SalesOrderLines", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Entities.Warehouse", b =>
@@ -442,6 +563,25 @@ namespace ERP.Infrastructure.Migrations
                     b.Navigation("Warehouse");
                 });
 
+            modelBuilder.Entity("ERP.Domain.Entities.FulfillmentTask", b =>
+                {
+                    b.HasOne("ERP.Domain.Entities.SalesOrder", "SalesOrder")
+                        .WithOne("FulfillmentTask")
+                        .HasForeignKey("ERP.Domain.Entities.FulfillmentTask", "SalesOrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ERP.Domain.Entities.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SalesOrder");
+
+                    b.Navigation("Warehouse");
+                });
+
             modelBuilder.Entity("ERP.Domain.Entities.Product", b =>
                 {
                     b.HasOne("ERP.Domain.Entities.Category", "Category")
@@ -451,6 +591,52 @@ namespace ERP.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Entities.SalesOrder", b =>
+                {
+                    b.HasOne("ERP.Domain.Entities.AppUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ERP.Domain.Entities.AppUser", "CustomerUser")
+                        .WithMany()
+                        .HasForeignKey("CustomerUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ERP.Domain.Entities.CustomerAddress", "ShippingAddress")
+                        .WithMany()
+                        .HasForeignKey("ShippingAddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("CustomerUser");
+
+                    b.Navigation("ShippingAddress");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Entities.SalesOrderLine", b =>
+                {
+                    b.HasOne("ERP.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ERP.Domain.Entities.SalesOrder", "SalesOrder")
+                        .WithMany("Lines")
+                        .HasForeignKey("SalesOrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("SalesOrder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -507,6 +693,13 @@ namespace ERP.Infrastructure.Migrations
             modelBuilder.Entity("ERP.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ERP.Domain.Entities.SalesOrder", b =>
+                {
+                    b.Navigation("FulfillmentTask");
+
+                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("ERP.Domain.Entities.Warehouse", b =>
