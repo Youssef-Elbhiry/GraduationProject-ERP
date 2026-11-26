@@ -18,6 +18,9 @@ public class ErpDbContext : IdentityDbContext<AppUser>
     public DbSet<SalesOrder> SalesOrders { get; set; }
     public DbSet<SalesOrderLine> SalesOrderLines { get; set; }
     public DbSet<FulfillmentTask> FulfillmentTasks { get; set; }
+    public DbSet<ProductStock> ProductStocks { get; set; }
+    public DbSet<ProductStockMovement> ProductStockMovements { get; set; }
+    public DbSet<Shipment> Shipments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

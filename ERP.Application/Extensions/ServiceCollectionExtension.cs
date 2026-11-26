@@ -3,6 +3,7 @@ using ERP.Application.Customer;
 using ERP.Application.Warehouse;
 using ERP.Application.Factory;
 using ERP.Application.SalesOrder;
+using ERP.Application.ProductStock;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +27,8 @@ namespace ERP.Application.Extensions;
         services.AddScoped<IWarehouseService, WarehouseService>();
         services.AddScoped<IFactoryService, FactoryService>();
         services.AddScoped<ISalesOrderService, SalesOrderService>();
+        services.AddScoped<IProductStockService, ProductStockService>();
+        services.AddScoped<ShipmentService>();
 
         services.Configure<JwtOptions>(configuration.GetSection("JWT"));
     }

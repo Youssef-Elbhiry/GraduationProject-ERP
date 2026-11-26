@@ -8,16 +8,41 @@ namespace ERP.Infrastructure.Repositories;
 
 public class SalesOrderRepository(ErpDbContext context) : ISalesOrderRepository
 {
-    public Task<SalesOrder?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
-        context.SalesOrders.Include(x => x.Lines).Include(x => x.CustomerUser)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-    public Task<List<SalesOrder>> GetAllAsync(string? customerUserId, SalesOrderStatus? status, CancellationToken cancellationToken = default)
+    public Task<SalesOrder?> GetByIdAsync(
+        int id,
+        CancellationToken cancellationToken = default)
     {
-        IQueryable<SalesOrder> query = context.SalesOrders.AsNoTracking().Include(x => x.Lines);
-        if (!string.IsNullOrWhiteSpace(customerUserId)) query = query.Where(x => x.CustomerUserId == customerUserId);
-        if (status.HasValue) query = query.Where(x => x.Status == status.Value);
-        return query.OrderByDescending(x => x.CreatedAt).ThenByDescending(x => x.Id).ToListAsync(cancellationToken);
+        return context.SalesOrders
+            .Include(order => order.Lines)
+            .Include(order => order.CustomerUser)
+            .Include(order => order.FulfillmentTask)
+            .FirstOrDefaultAsync(order => order.Id == id, cancellationToken);
+    }
+
+    public Task<List<SalesOrder>> GetAllAsync(
+        string? customerUserId,
+        SalesOrderStatus? status,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<SalesOrder> query = context.SalesOrders
+            .AsNoTracking()
+            .Include(order => order.Lines)
+            .Include(order => order.FulfillmentTask);
+
+        if (!string.IsNullOrWhiteSpace(customerUserId))
+        {
+            query = query.Where(order => order.CustomerUserId == customerUserId);
+        }
+
+        if (status.HasValue)
+        {
+            query = query.Where(order => order.Status == status.Value);
+        }
+
+        return query
+            .OrderByDescending(order => order.CreatedAt)
+            .ThenByDescending(order => order.Id)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task AddAsync(SalesOrder order, CancellationToken cancellationToken = default) =>

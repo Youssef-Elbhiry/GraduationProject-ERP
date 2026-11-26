@@ -1,6 +1,7 @@
 ﻿using ERP.Application.Interfaces;
 using ERP.Infrastructure.Persistence;
 using ERP.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ERP.Infrastructure.Repositories
@@ -18,6 +19,8 @@ namespace ERP.Infrastructure.Repositories
             Factories = new FactoryRepository(context);
             SalesOrders = new SalesOrderRepository(context);
             FulfillmentTasks = new FulfillmentTaskRepository(context);
+            ProductStocks = new ProductStockRepository(context);
+            Shipments = new ShipmentRepository(context);
         }
 
         public ICustomerRepository Customers { get; }
@@ -25,6 +28,8 @@ namespace ERP.Infrastructure.Repositories
         public IFactoryRepository Factories { get; }
         public ISalesOrderRepository SalesOrders { get; }
         public IFulfillmentTaskRepository FulfillmentTasks { get; }
+        public IProductStockRepository ProductStocks { get; }
+        public IShipmentRepository Shipments { get; }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
@@ -34,6 +39,13 @@ namespace ERP.Infrastructure.Repositories
 
         public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken) =>
             _context.Database.BeginTransactionAsync(cancellationToken);
+        public Task<IDbContextTransaction> BeginSerializableTransactionAsync(
+            CancellationToken cancellationToken)
+        {
+            return _context.Database.BeginTransactionAsync(
+                System.Data.IsolationLevel.Serializable,
+                cancellationToken);
+        }
 
         public async Task CommitTransactionAsync()
         {

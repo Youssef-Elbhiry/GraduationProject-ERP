@@ -16,9 +16,12 @@ namespace ERP.Application.Interfaces
         IFactoryRepository Factories { get; }
         ISalesOrderRepository SalesOrders { get; }
         IFulfillmentTaskRepository FulfillmentTasks { get; }
+        IProductStockRepository ProductStocks { get; }
+        IShipmentRepository Shipments { get; }
         public IGenericRepository<T> Repository<T>() where T : class;
         public Task<IDbContextTransaction> BeginTransactionAsync();
         public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
+        public Task<IDbContextTransaction> BeginSerializableTransactionAsync(CancellationToken cancellationToken);
         public Task CommitTransactionAsync();
         public Task<int> SaveChangesAsync();
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken);

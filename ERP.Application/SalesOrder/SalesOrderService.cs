@@ -1,4 +1,5 @@
 using ERP.Application.Interfaces;
+using ERP.Application.ProductStock;
 using ERP.Application.SalesOrder.Dtos;
 using ERP.Domain.Constants;
 using ERP.Domain.Entities;
@@ -14,7 +15,8 @@ public class SalesOrderService(
     IUnitOfWork unitOfWork,
     IDocumentNumberGenerator documentNumberGenerator,
     IEmailSender emailSender,
-    ILogger<SalesOrderService> logger) : ISalesOrderService
+    ILogger<SalesOrderService> logger,
+    IProductStockService? productStockService = null) : ISalesOrderService
 {
     public async Task<SalesOrderOperationResult<SalesOrderDto>> CreateAsync(
         SalesOrderWriteDto dto, string createdByUserId, CancellationToken cancellationToken = default)
@@ -146,7 +148,18 @@ public class SalesOrderService(
             return SalesOrderOperationResult<SalesOrderDto>.NotFound();
 
         if (order.Status == SalesOrderStatus.Confirmed)
+        {
+            var existingTask = await unitOfWork.FulfillmentTasks.GetBySalesOrderIdAsync(order.Id, cancellationToken);
+            if (existingTask is not null
+                && existingTask.Status == FulfillmentStatus.Waiting
+                && productStockService is not null)
+            {
+                await productStockService.CheckWithinCurrentTransactionAsync(existingTask, cancellationToken);
+            }
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
             return SalesOrderOperationResult<SalesOrderDto>.Success(ToDto(order));
+        }
         if (order.Status != SalesOrderStatus.Sent)
             return SalesOrderOperationResult<SalesOrderDto>.Conflict("Only Sent sales orders can be confirmed.");
         if (order.ValidUntil < DateTime.UtcNow)
@@ -156,16 +169,24 @@ public class SalesOrderService(
         if (warehouse is null)
             return SalesOrderOperationResult<SalesOrderDto>.Conflict("No active warehouse is configured.");
 
-        // TODO (Phase 3): Run the order availability check here before creating the fulfillment task.
+        // Check availability in this transaction after creating the fulfillment task.
         order.Status = SalesOrderStatus.Confirmed;
         order.ConfirmedAt = DateTime.UtcNow;
-        await unitOfWork.FulfillmentTasks.AddAsync(new FulfillmentTask
+        var task = new FulfillmentTask
         {
             SalesOrderId = order.Id,
             WarehouseId = warehouse.Id,
             Status = FulfillmentStatus.Waiting,
             CreatedAt = DateTime.UtcNow
-        }, cancellationToken);
+        };
+        task.SalesOrder = order;
+        await unitOfWork.FulfillmentTasks.AddAsync(task, cancellationToken);
+        order.FulfillmentTask = task;
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        if (productStockService is not null)
+        {
+            await productStockService.CheckWithinCurrentTransactionAsync(task, cancellationToken);
+        }
         await unitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return SalesOrderOperationResult<SalesOrderDto>.Success(ToDto(order));
@@ -196,7 +217,12 @@ public class SalesOrderService(
             return SalesOrderOperationResult<SalesOrderDto>.Conflict("Only Draft, Sent, or Confirmed sales orders can be cancelled.");
 
         var fulfillmentTask = await unitOfWork.FulfillmentTasks.GetBySalesOrderIdAsync(id, cancellationToken);
-        if (fulfillmentTask is not null) fulfillmentTask.Status = FulfillmentStatus.Cancelled;
+        if (fulfillmentTask is not null)
+        {
+            if (await unitOfWork.Shipments.GetByTaskIdAsync(fulfillmentTask.Id, cancellationToken) is not null)
+                return SalesOrderOperationResult<SalesOrderDto>.Conflict("Sales orders with a shipment cannot be cancelled.");
+            fulfillmentTask.Status = FulfillmentStatus.Cancelled;
+        }
         order.Status = SalesOrderStatus.Cancelled;
         await unitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -263,7 +289,7 @@ public class SalesOrderService(
             Lines = lines,
             Total = lines.Sum(x => x.LineTotal),
             IsExpired = order.Status == SalesOrderStatus.Sent && order.ValidUntil < now,
-            DeliveryState = null,
+            DeliveryState = order.FulfillmentTask?.Status.ToString(),
             InvoiceState = null,
             PaymentState = null
         };

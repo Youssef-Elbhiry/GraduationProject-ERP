@@ -13,4 +13,5 @@ public class FulfillmentTask
 
     public SalesOrder SalesOrder { get; set; } = null!;
     public Warehouse Warehouse { get; set; } = null!;
+    public Shipment? Shipment { get; set; }
 }
