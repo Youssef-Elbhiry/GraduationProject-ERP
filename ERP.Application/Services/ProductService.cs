@@ -129,7 +129,6 @@ namespace ERP.Application.Services
                 existingProduct.Name = product.Name;
                 existingProduct.SalesPrice = product.SalesPrice;
                 existingProduct.CostPrice = product.CostPrice;
-                existingProduct.Quantity = product.Quantity;
                 existingProduct.IsActive = product.IsActive;
                 existingProduct.Description = product.Description;
                 existingProduct.CategoryId = product.CategoryId;

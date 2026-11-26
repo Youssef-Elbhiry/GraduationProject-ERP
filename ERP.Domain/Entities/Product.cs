@@ -15,7 +15,6 @@ namespace ERP.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public decimal SalesPrice { get; set; }
         public decimal CostPrice { get; set; }
-        public int Quantity { get; set; }
         public bool IsActive { get; set; } = true;
         public string ImageUrl { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
