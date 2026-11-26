@@ -6,5 +6,5 @@ public class AppUser : IdentityUser
 {
     public string Name { get; set; } = string.Empty;
 
-    public List<RefreshToken>? RefreshTokens { get; set; }
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }
